@@ -1,10 +1,16 @@
 import axios from "axios";
 
-const API_BASE_URL =
+function normalizeBaseUrl(value) {
+  const raw = (value || "").toString().trim();
+  return raw.replace(/\/+$/, "");
+}
+
+const API_BASE_URL = normalizeBaseUrl(
   process.env.REACT_APP_API_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://beyond-backend-6.onrender.com"
-    : "http://localhost:5000");
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.VITE_API_URL ||
+    "https://beyond-backend-6.onrender.com/api"
+);
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -25,7 +31,7 @@ api.interceptors.response.use(
 );
 
 export async function fetchArticles({ page = 1, limit = 10, search = "" } = {}) {
-  const res = await api.get("/api/articles", {
+  const res = await api.get("/articles", {
     params: {
       page,
       limit,
@@ -36,12 +42,12 @@ export async function fetchArticles({ page = 1, limit = 10, search = "" } = {}) 
 }
 
 export async function fetchArticleById(id) {
-  const res = await api.get(`/api/articles/${id}`);
+  const res = await api.get(`/articles/${id}`);
   return res.data;
 }
 
 export async function fetchArticleBySlug(slug) {
-  const res = await api.get(`/api/articles/slug/${encodeURIComponent(slug)}`);
+  const res = await api.get(`/articles/slug/${encodeURIComponent(slug)}`);
   return res.data;
 }
 
