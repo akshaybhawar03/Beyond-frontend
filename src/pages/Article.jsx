@@ -42,9 +42,21 @@ export default function Article() {
   const seoTitle = article?.title || "BeyondChats Blogs";
   const seoDescription = (article?.content || "").replace(/\s+/g, " ").trim().slice(0, 160);
 
+  function firstImageUrl(text) {
+    const input = String(text || "");
+    const match = input.match(/https?:\/\/[^\s"')>]+\.(?:png|jpe?g|webp|gif)(?:\?[^\s"')>]*)?/i);
+    return match ? match[0] : "";
+  }
+
   const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
   const preferredPath = article?.slug ? `/blog/${article.slug}` : slug ? `/blog/${slug}` : id ? `/article/${id}` : "/";
   const seoUrl = `${origin}${preferredPath}`;
+
+  const defaultOgImage =
+    process.env.REACT_APP_OG_IMAGE ||
+    "https://via.placeholder.com/1200x630.png?text=BeyondChats+Blogs";
+
+  const seoImage = firstImageUrl(article?.content) || defaultOgImage;
 
   const jsonLd = article
     ? {
@@ -121,6 +133,9 @@ export default function Article() {
         <meta property="og:description" content={seoDescription} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={seoUrl} />
+        <meta property="og:image" content={seoImage} />
+
+        <meta name="twitter:image" content={seoImage} />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={seoTitle} />

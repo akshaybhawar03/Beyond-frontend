@@ -76,6 +76,10 @@ export default function Home() {
     scrollToTop();
   }
 
+  const defaultOgImage =
+    process.env.REACT_APP_OG_IMAGE ||
+    "https://via.placeholder.com/1200x630.png?text=BeyondChats+Blogs";
+
   return (
     <div className="container">
       <Helmet>
@@ -94,6 +98,15 @@ export default function Home() {
           content="Read latest blogs and insights from BeyondChats on AI, chatbots, SEO and technology."
         />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content={defaultOgImage} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="BeyondChats Blogs" />
+        <meta
+          name="twitter:description"
+          content="Read latest blogs and insights from BeyondChats on AI, chatbots, SEO and technology."
+        />
+        <meta name="twitter:image" content={defaultOgImage} />
       </Helmet>
 
       <h1 className="page-title">BeyondChats Blogs</h1>
