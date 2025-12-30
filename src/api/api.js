@@ -6,7 +6,10 @@ function normalizeBaseUrl(value) {
 }
 
 const API_BASE_URL = normalizeBaseUrl(
-  process.env.REACT_APP_API_URL || "https://beyond-backend-6.onrender.com"
+  process.env.REACT_APP_API_URL ||
+    (process.env.NODE_ENV === "production"
+      ? "https://beyond-backend-6.onrender.com"
+      : "http://localhost:5000")
 );
 
 const api = axios.create({
