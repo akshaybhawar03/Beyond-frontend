@@ -1,7 +1,13 @@
 import axios from "axios";
 
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://beyond-backend-6.onrender.com"
+    : "http://localhost:5000");
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000",
+  baseURL: API_BASE_URL,
   timeout: 30000,
   headers: {
     Accept: "application/json",
@@ -12,7 +18,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error && !error.response) {
-      return Promise.reject(new Error("Cannot reach backend at http://localhost:5000"));
+      return Promise.reject(new Error(`Cannot reach backend at ${API_BASE_URL}`));
     }
     return Promise.reject(error);
   }
