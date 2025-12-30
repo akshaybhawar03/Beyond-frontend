@@ -58,6 +58,15 @@ export default function Article() {
 
   const seoImage = firstImageUrl(article?.content) || defaultOgImage;
 
+  const shareTitle = article?.title || "BeyondChats Blogs";
+  const shareText = `${shareTitle}`;
+  const encodedUrl = encodeURIComponent(seoUrl);
+  const encodedText = encodeURIComponent(shareText);
+
+  const whatsappShareUrl = `https://wa.me/?text=${encodedText}%20${encodedUrl}`;
+  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+
   const jsonLd = article
     ? {
         "@context": "https://schema.org",
@@ -153,6 +162,41 @@ export default function Article() {
             <a href={article.url} target="_blank" rel="noreferrer" className="btn-outline">
               Read original
             </a>
+          ) : null}
+
+          {!loading && !error && (article || slug) ? (
+            <>
+              <a
+                href={whatsappShareUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-outline"
+                aria-label="Share on WhatsApp"
+                title="Share on WhatsApp"
+              >
+                WhatsApp
+              </a>
+              <a
+                href={twitterShareUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-outline"
+                aria-label="Share on Twitter"
+                title="Share on Twitter"
+              >
+                Twitter
+              </a>
+              <a
+                href={linkedinShareUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-outline"
+                aria-label="Share on LinkedIn"
+                title="Share on LinkedIn"
+              >
+                LinkedIn
+              </a>
+            </>
           ) : null}
         </div>
 
