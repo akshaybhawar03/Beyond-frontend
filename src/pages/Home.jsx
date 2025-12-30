@@ -76,6 +76,34 @@ export default function Home() {
     scrollToTop();
   }
 
+  const paginationItems = useMemo(() => {
+    if (totalPages <= 1) return [];
+    if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+
+    let start;
+    let end;
+    if (currentPage <= 3) {
+      start = 2;
+      end = 4;
+    } else if (currentPage >= totalPages - 2) {
+      start = totalPages - 3;
+      end = totalPages - 1;
+    } else {
+      start = currentPage - 1;
+      end = currentPage + 1;
+    }
+
+    start = Math.max(2, start);
+    end = Math.min(totalPages - 1, end);
+
+    const items = [1];
+    if (start > 2) items.push("...");
+    for (let p = start; p <= end; p += 1) items.push(p);
+    if (end < totalPages - 1) items.push("...");
+    items.push(totalPages);
+    return items;
+  }, [currentPage, totalPages]);
+
   const defaultOgImage =
     process.env.REACT_APP_OG_IMAGE ||
     "https://via.placeholder.com/1200x630.png?text=BeyondChats+Blogs";
@@ -247,16 +275,28 @@ export default function Home() {
             Previous
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              type="button"
-              className={`page-btn ${p === currentPage ? "active" : ""}`}
-              onClick={() => handlePageChange(p)}
-            >
-              {p}
-            </button>
-          ))}
+          {paginationItems.map((item, idx) => {
+            if (item === "...") {
+              return (
+                <span key={`dots-${idx}`} className="page-btn disabled" aria-hidden="true">
+                  ...
+                </span>
+              );
+            }
+
+            const p = item;
+            return (
+              <button
+                key={p}
+                type="button"
+                className={`page-btn ${p === currentPage ? "active" : ""}`}
+                onClick={() => handlePageChange(p)}
+                aria-current={p === currentPage ? "page" : undefined}
+              >
+                {p}
+              </button>
+            );
+          })}
 
           <button
             type="button"
